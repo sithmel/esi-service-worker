@@ -1,0 +1,36 @@
+{
+  "name": "esi-stream-parser",
+  "version": "0.0.0",
+  "description": "ESI stream parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "zUnit",
+    "types": "tsc",
+    "format": "prettier --ignore-unknown --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sithmel/esi-stream-parser.git"
+  },
+  "keywords": [
+    "service-worker",
+    "esi",
+    "edge side includes"
+  ],
+  "author": "Maurizio Lupo <maurizio.lupo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sithmel/esi-stream-parser/issues"
+  },
+  "homepage": "https://github.com/sithmel/esi-stream-parser#readme",
+  "devDependencies": {
+    "entities": "^4.5.0",
+    "prettier": "^3.0.3",
+    "rollup": "^4.2.0",
+    "typescript": "^5.2.2",
+    "zunit": "^4.0.2"
+  },
+  "prettier": {
+    "semi": false
+  }
+}
