@@ -32,5 +32,8 @@
   },
   "prettier": {
     "semi": false
+  },
+  "dependencies": {
+    "htmlparser2": "^9.0.0"
   }
 }
