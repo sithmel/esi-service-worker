@@ -5,14 +5,14 @@ import pkg from "zunit"
 import { TransparentStateWriter } from "../src/state.mjs"
 import parseReadableStream from "../src/parseReadableStream.mjs"
 
-const { describe, it, beforeEach, odescribe } = pkg
+const { describe, it, before } = pkg
 
 const testString =
   '<div class="hello world"><link type="stylesheet" />Hello world!<br /></div>'
 
 describe("parseReadableStream", () => {
   let testStream
-  beforeEach(() => {
+  before(() => {
     testStream = new Blob([testString], { type: "text/plain" }).stream()
   })
   it("works", async () => {
