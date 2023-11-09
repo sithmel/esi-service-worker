@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * Void tags - self closing
  * https://github.com/fb55/htmlparser2/blob/master/lib/Parser.js#L59
@@ -32,5 +33,6 @@ const voidElements = new Set([
   "stop",
   "polyline",
   "polygone",
+  "esi:include",
 ])
 export default voidElements

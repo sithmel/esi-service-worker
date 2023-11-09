@@ -8,8 +8,14 @@ import {
   ESIStreamStateWriter,
 } from "../src/state.mjs"
 
+import parseReadableStream from "../src/parseReadableStream.mjs"
+
 const { describe, it, before } = pkg
 
+/**
+ * @param {{text:string}} output
+ * @returns {WritableStream}
+ */
 function getTestWritableStream(output) {
   output.text = ""
   const decoder = new TextDecoder()
@@ -17,6 +23,10 @@ function getTestWritableStream(output) {
 
   return new WritableStream(
     {
+      /**
+       * @param {AllowSharedBufferSource} chunk
+       * @returns {Promise<void>}
+       */
       write(chunk) {
         return new Promise((resolve, reject) => {
           const decoded = decoder.decode(chunk, { stream: true })
@@ -46,7 +56,7 @@ describe("state", () => {
 
   describe("TransparentStreamStateWriter", () => {
     it("works", async () => {
-      const output = {}
+      const output = { text: "" }
       const writable = getTestWritableStream(output)
       const state = new TransparentStreamStateWriter(writable)
       state.openTag("div", { class: "hello world" }, false)
@@ -63,16 +73,17 @@ describe("state", () => {
   })
 
   describe("ESIStreamStateWriter", () => {
+    /** @type {(arg0: string) => Promise<ReadableStream<Uint8Array>|null>} */
     let fetchFunction
     before(() => {
-      fetchFunction = (url) => {
+      fetchFunction = async (url) => {
         return new Blob([`<div class="test">${url}</div>`], {
           type: "text/plain",
         }).stream()
       }
     })
     it("works as transparent", async () => {
-      const output = {}
+      const output = { text: "" }
       const writable = getTestWritableStream(output)
       const state = new ESIStreamStateWriter(writable, fetchFunction)
       state.openTag("div", { class: "hello world" }, false)
@@ -87,7 +98,7 @@ describe("state", () => {
       )
     })
     it("works with esi:remove", async () => {
-      const output = {}
+      const output = { text: "" }
       const writable = getTestWritableStream(output)
       const state = new ESIStreamStateWriter(writable, fetchFunction)
       state.openTag("div", { class: "hello world" }, false)
@@ -110,7 +121,7 @@ describe("state", () => {
     })
 
     it("works with esi:include", async () => {
-      const output = {}
+      const output = { text: "" }
       const writable = getTestWritableStream(output)
       const state = new ESIStreamStateWriter(writable, fetchFunction)
       state.openTag("div", { class: "hello world" }, false)
@@ -128,7 +139,7 @@ describe("state", () => {
       )
     })
     it("works with esi:include, fetch error", async () => {
-      const output = {}
+      const output = { text: "" }
       const writable = getTestWritableStream(output)
       const state = new ESIStreamStateWriter(writable, () => {
         return Promise.reject(new Error("ops"))
@@ -145,6 +156,21 @@ describe("state", () => {
       assert.equal(
         output.text,
         '<div class="hello world"><link type="stylesheet" /><!--ESI Error: ops-->Hello world!<br /></div>',
+      )
+    })
+
+    it("works end to end", async () => {
+      const output = { text: "" }
+      const writable = getTestWritableStream(output)
+      const state = new ESIStreamStateWriter(writable, fetchFunction)
+      const testString =
+        '<div class="hello world"><link type="stylesheet" /><esi:include src="hello fragment" />Hello world!<br /></div>'
+      const readable = new Blob([testString], { type: "text/plain" }).stream()
+
+      await parseReadableStream(readable, state)
+      assert.equal(
+        output.text,
+        '<div class="hello world"><link type="stylesheet" /><div class="test">hello fragment</div>Hello world!<br /></div>',
       )
     })
   })

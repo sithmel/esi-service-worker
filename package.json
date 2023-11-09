@@ -1,29 +1,35 @@
 {
-  "name": "esi-stream-parser",
+  "name": "esi-service-worker",
   "version": "0.0.0",
-  "description": "ESI stream parser",
-  "main": "index.js",
+  "description": "ESI stream parser for service and cloudflare workers ",
+  "main": "src/index.mjs",
+  "type": "module",
   "scripts": {
     "test": "zUnit",
     "types": "tsc",
-    "format": "prettier --ignore-unknown --write ."
+    "format": "prettier --ignore-unknown --write .",
+    "build": "rollup -c -o serviceworker.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sithmel/esi-stream-parser.git"
+    "url": "git+https://github.com/sithmel/esi-service-worker.git"
   },
   "keywords": [
-    "service-worker",
+    "serviceworker",
     "esi",
     "edge side includes"
   ],
   "author": "Maurizio Lupo <maurizio.lupo@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sithmel/esi-stream-parser/issues"
+    "url": "https://github.com/sithmel/esi-service-worker/issues"
   },
-  "homepage": "https://github.com/sithmel/esi-stream-parser#readme",
+  "homepage": "https://github.com/sithmel/esi-service-worker#readme",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@types/node": "^20.9.0",
+    "@types/serviceworker": "^0.0.76",
+    "@types/web": "^0.0.119",
     "entities": "^4.5.0",
     "prettier": "^3.0.3",
     "rollup": "^4.2.0",

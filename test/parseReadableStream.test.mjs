@@ -11,6 +11,7 @@ const testString =
   '<div class="hello world"><link type="stylesheet" />Hello world!<br /></div>'
 
 describe("parseReadableStream", () => {
+  /** @type {ReadableStream} */
   let testStream
   before(() => {
     testStream = new Blob([testString], { type: "text/plain" }).stream()

@@ -1,19 +1,21 @@
-import { ESIStreamStateWriter } from "../src/state.mjs"
-import parseReadableStream from "../src/parseReadableStream.mjs"
+//@ts-check
 
-self.addEventListener("fetch", (event) => {
-  event.respondWith(fetchAndStream(event.request))
-  // the following is implemented in Cloudflare workers
-  if ("passThroughOnException" in event) {
-    event.passThroughOnException()
-  }
-})
+import { ESIStreamStateWriter } from "./state.mjs"
+import parseReadableStream from "./parseReadableStream.mjs"
 
-async function fetchAndStream(request) {
+/**
+ * @param {Request} request
+ * @returns {Promise<Response>}
+ */
+export default async function fetchAndStream(request) {
   let response = await fetch(request)
   let contentType = response.headers.get("content-type")
 
-  if (!contentType || !contentType.startsWith("text/")) {
+  if (
+    !contentType ||
+    !contentType.startsWith("text/") ||
+    response.body == null
+  ) {
     return response
   }
   let { readable, writable } = new TransformStream()
@@ -23,6 +25,11 @@ async function fetchAndStream(request) {
   return newResponse
 }
 
+/**
+ * @param {ReadableStream} readable
+ * @param {WritableStream} writable
+ * @returns {Promise<void>}
+ */
 async function streamTransformBody(readable, writable) {
   const state = new ESIStreamStateWriter(writable)
   await parseReadableStream(readable, state)

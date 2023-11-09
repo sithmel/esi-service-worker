@@ -1,6 +1,12 @@
+//@ts-check
 import * as htmlparser2 from "htmlparser2"
 import voidElements from "./voidElements.mjs"
 
+/**
+ * @param {ReadableStream} readable
+ * @param {import("./state.mjs").TransparentStateWriter} state
+ * @returns {Promise<void>}
+ */
 export default async function parseReadableStream(readable, state) {
   return new Promise(async (resolve, reject) => {
     let selfClosing = false
