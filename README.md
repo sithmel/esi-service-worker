@@ -29,15 +29,10 @@ The package includes a prebundled version `serviceworker.js`
 A serviceworker can also be implemented with:
 
 ```js
-//@ts-check
 import fetchAndStream from "esi-stream-parser"
 
 self.addEventListener("fetch", onFetch)
 
-/**
- * @param {FetchEvent} event
- * @returns {void}
- */
 function onFetch(event) {
   event.respondWith(fetchAndStream(event.request))
   // the following is implemented in Cloudflare workers
