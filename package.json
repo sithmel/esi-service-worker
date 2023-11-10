@@ -1,6 +1,6 @@
 {
   "name": "esi-service-worker",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "ESI stream parser for service and cloudflare workers ",
   "main": "src/index.mjs",
   "type": "module",
